@@ -56,6 +56,11 @@ const Account = new Schema({
         type: Schema.Types.ObjectId,
         default: null,
         ref: "PasswordResetCode",
-    }
+    },
+    imageStores: [{
+        type: Schema.Types.ObjectId,
+        default: null,
+        ref: "ImageStores",
+    }]
 }, { timestamps: true });
 export default model("Account", Account)

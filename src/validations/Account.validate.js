@@ -28,7 +28,22 @@ const accountValidate = {
         name: Joi.string().allow('', null),
         phone: Joi.string().allow('', null).pattern(new RegExp('^[0-9]{10}$')),
         avatar: Joi.string().allow('', null).uri()
+    }),
+    validateChangePassword: Joi.object({
+        oldPassword: Joi.string()
+            .min(8)
+            .pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$'))
+            .required(),
+        newPassword: Joi.string()
+            .min(8)
+            .pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$'))
+            .required(),
+    }),
+    validateUploadImage: Joi.object({
+        url: Joi.string().uri().required(),
+        description: Joi.string().allow('', null),
     })
+
 
 
 
