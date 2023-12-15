@@ -8,10 +8,10 @@ import session from 'express-session';
 import passport from 'passport';
 import indexRouter from './routes/index.route.js';
 import verifyToken from './middlewares/verifyToken.middleware.js';
-const { SERVER_PORT, MONGODB_URL } = process.env;
+const { SERVER_PORT, MONGODB_URL, CLIENT_URL } = process.env;
 
 const app = express();
-app.use(cors({ origin: true, credentials: true }));
+app.use(cors({ origin: CLIENT_URL, credentials: true }));
 app.use(cookieParser())
 app.use(json());
 app.use(urlencoded({ extended: true }));
