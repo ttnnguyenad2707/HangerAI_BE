@@ -4,8 +4,8 @@ import * as dotenv from 'dotenv'
 dotenv.config();
 const { ACCESS_KEY } = process.env;
 
-const verifyToken = asyncHandler(async (req, res, next) => {
-    const token = req?.authorization?.token;
+export const verifyToken = asyncHandler(async (req, res, next) => {
+    const token = req?.headers?.authorization;
     if (token) {
         const accessToken = token.split(" ")[1];
         try {
@@ -20,13 +20,38 @@ const verifyToken = asyncHandler(async (req, res, next) => {
     }
 });
 
+export const verifyTokenAdmin = asyncHandler(async(req,res,next) => {
+    await verifyToken(req,res, () => {
+        if (req.user.admin) {
+            next();
+            
+        }else{
+            return res.status(403).json("You are not an Admin");
+        }
+    })
+})
 
-function verifyTokenAdmin(req, res, next) {
-    const url = req.url.toLowerCase().trim();
-    const listUrlForAdmin = ["/admin"];
-    const token = req.headers?.authorization?.split(" ")[1];
-    // if ()
-}
+export const verifyTokenAccountLevelPro = asyncHandler(async(req,res,next) => {
+    await verifyToken(req,res, () => {
+        if (req.user.level === "Pro" || req.user.level === "Premium") {
+            next();
+            
+        }else{
+            return res.status(403).json("You are not an account level Pro");
+        }
+    })
+})
+
+export const verifyTokenAccountLevelPremium = asyncHandler(async(req,res,next) => {
+    await verifyToken(req,res, () => {
+        if (req.user.level === "Premium") {
+            next();
+            
+        }else{
+            return res.status(403).json("You are not an account level Premium");
+        }
+    })
+})
 
 // const verifyTokenAdmin = asyncHandler(async (req, res, next) => {
 //     await verifyToken(req, res, () => {
@@ -39,5 +64,4 @@ function verifyTokenAdmin(req, res, next) {
 
 // });
 
-export default verifyToken
 

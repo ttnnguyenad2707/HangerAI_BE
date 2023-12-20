@@ -16,7 +16,7 @@ const Account = new Schema({
         unique: true
     },
     phone: {
-        type: Number,
+        type: String,
         minlength: 10,
         default: null,
 
@@ -42,6 +42,14 @@ const Account = new Schema({
         type: String,
         enum: ["Lite", "Pro", "Premium"],
         default: "Lite"
+    },
+    credit :{
+        type: Number,
+        default: 5,
+    },
+    lastReset: {
+        type: Date,
+        default: Date.now
     },
     status: {
         type: Boolean,

@@ -2,7 +2,7 @@ import express from "express";
 import AuthController from "../controllers/Auth.controller.js";
 import validateData from "../validations/ValidateData.js";
 import accountValidate from "../validations/Account.validate.js";
-import verifyToken from "../middlewares/verifyToken.middleware.js";
+import {verifyToken} from "../middlewares/verifyToken.middleware.js";
 const AuthRoute = express.Router();
 
 AuthRoute.post("/verify-password-reset-code", AuthController.verifyPasswordResetCode);

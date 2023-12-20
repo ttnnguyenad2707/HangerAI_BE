@@ -7,7 +7,8 @@ import cookieParser from "cookie-parser";
 import session from 'express-session';
 import passport from 'passport';
 import indexRouter from './routes/index.route.js';
-import verifyToken from './middlewares/verifyToken.middleware.js';
+import cron from 'node-cron'
+import resetCredits from './utils/resetCredit.js';
 const { SERVER_PORT, MONGODB_URL, CLIENT_URL } = process.env;
 
 const app = express();
@@ -44,6 +45,10 @@ app.use(
     '/api/v1',
     indexRouter
 );
+
+cron.schedule('* * * * *', () => {
+    resetCredits();
+});
 
 const startServer = async () => {
     try {

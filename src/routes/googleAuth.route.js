@@ -3,6 +3,8 @@ import passport from "passport";
 import { OAuth2Strategy as GoogleStrategy } from 'passport-google-oauth';
 import * as dotenv from 'dotenv'
 import GoogleAuthService from "../services/GoogleAuth.service.js";
+import TokenService from "../services/Token.service.js";
+import AccountModel from '../models/Account.model.js';
 dotenv.config();
 
 const GoogleAuthRoute = express.Router();
@@ -16,6 +18,7 @@ passport.use(
             callbackURL: process.env.GOOGLE_CALLBACK_URL,
         },
         function (accessToken, refreshToken, profile, done) {
+            GoogleAuthService.loginWithGoogle(profile)
             userProfile = profile;
             return done(null, userProfile);
         }
@@ -31,19 +34,21 @@ GoogleAuthRoute.get(
     });
 
 GoogleAuthRoute.get('/success', async (req, res) => {
-    const { dataOutput, genAccessToken } = await GoogleAuthService.registerWithGoogle(userProfile);
-    if (dataOutput) {
-        console.log(genAccessToken)
+    try { 
+        const Account = await AccountModel.findOne({email: req.session.passport.user.emails[0].value})
+        const genAccessToken = TokenService.genAccessToken(Account._doc);
         res.cookie("accessToken", genAccessToken, {
             httpOnly: false,
             secure: false,
             path: "/",
             sameSite: "strict",
         });
-        return res.status(200).json(dataOutput);
-    } else {
-        return res.send("Error")
+        const {refreshToken,passwordResetCode,imageStores, ...other} = Account._doc
+        return res.status(200).json({message: "Login successfully" , data : other});
+    } catch (error) {
+        return res.status(500).json({message: error.message})
     }
+    
 });
 
 GoogleAuthRoute.get('/error', (req, res) => res.send('Error logging in via Google..'));
