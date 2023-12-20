@@ -46,7 +46,7 @@ app.use(
     indexRouter
 );
 
-cron.schedule('* * * * *', () => {
+cron.schedule('0 0 * * *', () => {
     resetCredits();
 });
 
