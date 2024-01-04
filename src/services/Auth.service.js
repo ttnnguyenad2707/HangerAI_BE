@@ -89,7 +89,7 @@ class AuthService {
             subject: "Reset your password",
             text: `Password reset code: ${passwordResetCode}`,
         })
-        return res.status(200).json({ message: "If a user with that email is registered you will receive a password reset email" })
+        return res.status(200).json({ message: "Check Email", data: { accountId: account._doc._id } })
     }
 
     async verifyPasswordResetCode(req, res) {
